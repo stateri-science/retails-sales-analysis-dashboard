@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="retail_sales.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="8514"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><table title="sales_raw" custom_title="0" dock_id="3" table="4,9:mainsales_raw"/><dock_state state="000000ff00000000fd00000001000000020000077400000387fc0100000002fc00000000000007740000000000fffffffa000000000100000002fb000000160064006f0063006b00420072006f00770073006500310100000000ffffffff0000000000000000fb000000160064006f0063006b00420072006f00770073006500320100000000ffffffff0000000000000000fb000000160064006f0063006b00420072006f00770073006500330100000000000007740000013900ffffff000002920000000000000004000000040000000800000008fc00000000"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="Sales_transactions_2022_2025" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="95"/><column index="2" value="71"/><column index="3" value="83"/><column index="4" value="151"/><column index="5" value="92"/><column index="6" value="111"/><column index="7" value="151"/><column index="8" value="87"/><column index="9" value="75"/><column index="10" value="103"/><column index="11" value="59"/><column index="12" value="167"/><column index="13" value="119"/><column index="14" value="183"/><column index="15" value="95"/><column index="16" value="72"/><column index="17" value="159"/><column index="18" value="127"/><column index="19" value="135"/><column index="20" value="57"/><column index="21" value="66"/><column index="22" value="129"/><column index="23" value="90"/><column index="24" value="85"/><column index="25" value="63"/><column index="26" value="111"/><column index="27" value="87"/><column index="28" value="106"/><column index="29" value="90"/><column index="30" value="77"/><column index="31" value="111"/><column index="32" value="135"/><column index="33" value="111"/><column index="34" value="107"/><column index="35" value="102"/><column index="36" value="73"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1*">SELECT DISTINCT Product_Category FROM sales_raw;
+
+SELECT DISTINCT
+    Product_Category,
+    CASE
+        WHEN UPPER(Product_Category) = 'ELECTRONICS' THEN 'Electronics'
+        WHEN UPPER(Product_Category) = 'FURNITURE' THEN 'Furniture'
+        WHEN UPPER(Product_Category) = 'OFFICE SUPPLIES' THEN 'Office Supplies'
+        WHEN UPPER(Product_Category) = 'APPLIANCES' THEN 'Appliances'
+        ELSE Product_Category
+    END AS category_clean
+FROM sales_raw;
+
+SELECT DISTINCT Payment_Method FROM sales_raw;
+
+-- Since there are Nulls from the Payment_Method
+SELECT DISTINCT
+    Payment_Method,
+    CASE
+        WHEN UPPER(REPLACE(Payment_Method, ' ', '')) = 'CREDITCARD' THEN 'Credit Card'
+        WHEN UPPER(REPLACE(Payment_Method, ' ', '')) = 'DEBITCARD' THEN 'Debit Card'
+        WHEN UPPER(REPLACE(Payment_Method, ' ', '')) = 'PAYPAL' THEN 'PayPal'
+        WHEN UPPER(REPLACE(Payment_Method, ' ', '')) = 'BANKTRANSFER' THEN 'Bank Transfer'
+        WHEN UPPER(REPLACE(Payment_Method, ' ', '')) = 'APPLEPAY' THEN 'Apple Pay'
+        WHEN UPPER(REPLACE(Payment_Method, ' ', '')) = 'CASH' THEN 'Cash'
+        ELSE 'Unknown'
+    END AS payment_method_clean
+FROM sales_raw;
+
+
+-- Complete QUERY
+CREATE VIEW sales_clean AS
+SELECT
+    Transaction_ID,
+    Order_ID,
+    Customer_ID,
+    Customer_Name,
+    Customer_Age,
+    Customer_Gender,
+    Customer_Segment,
+    Order_Date,
+    strftime('%Y', Order_Date) AS Order_Year,
+    strftime('%m', Order_Date) AS Order_Month,
+    Sales_Channel,
+    Country,
+    Region,
+    City,
+    Product_ID,
+    Product_Name,
+    CASE
+        WHEN UPPER(Product_Category) = 'ELECTRONICS' THEN 'Electronics'
+        WHEN UPPER(Product_Category) = 'FURNITURE' THEN 'Furniture'
+        WHEN UPPER(Product_Category) = 'OFFICE SUPPLIES' THEN 'Office Supplies'
+        WHEN UPPER(Product_Category) = 'APPLIANCES' THEN 'Appliances'
+        ELSE Product_Category
+    END AS Product_Category_Clean,
+    Product_Subcategory,
+    Quantity,
+    Unit_Price,
+    Discount_Percentage,
+    Sales_Amount,
+    Cost_Amount,
+    Profit,
+    CASE
+        WHEN UPPER(REPLACE(Payment_Method, ' ', '')) = 'CREDITCARD' THEN 'Credit Card'
+        WHEN UPPER(REPLACE(Payment_Method, ' ', '')) = 'DEBITCARD' THEN 'Debit Card'
+        WHEN UPPER(REPLACE(Payment_Method, ' ', '')) = 'PAYPAL' THEN 'PayPal'
+        WHEN UPPER(REPLACE(Payment_Method, ' ', '')) = 'BANKTRANSFER' THEN 'Bank Transfer'
+        WHEN UPPER(REPLACE(Payment_Method, ' ', '')) = 'APPLEPAY' THEN 'Apple Pay'
+        WHEN UPPER(REPLACE(Payment_Method, ' ', '')) = 'CASH' THEN 'Cash'
+        ELSE 'Unknown'
+    END AS Payment_Method_Clean,
+    Order_Status,
+    Shipping_Method,
+    Delivery_Days,
+    Return_Flag,
+    Return_Reason,
+    Sales_Representative,
+    Promotion_Code,
+    Customer_Rating,
+    Inventory_Level
+FROM sales_raw;</sql><current_tab id="0"/></tab_sql></sqlb_project>
