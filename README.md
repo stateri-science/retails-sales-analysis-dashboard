@@ -171,6 +171,13 @@ These recommendations are exploratory and are based on observed patterns in synt
 - The dashboard focuses on descriptive analytics rather than causal inference or forecasting.
 - Additional analysis would be needed to investigate customer behavior, seasonality, and future sales performance.
 
+## Author
+
+**Erica Jean Fortu**
+Email: fortuerica@gmail.com
+GitHub: [stateri-science](https://github.com/stateri-science)
+Portfolio: https://datascienceportfol.io/fortuerica
+
 ## Project Structure
 
 ```text
